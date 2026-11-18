@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before You Loan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4faf6;--card:#ffffff;--line:#d9ebe0;--text:#12301f;--mute:#5f7a6a;
+    --accent:#16a34a;--accent2:#0f7a37;--field:#f8fcf9;--bad:#16a34a;--warnbg:#ffffff;--warnline:#d9ebe0;
+    --amber:#d97706;--good:#16a34a;--goodbg:#effaf3;--goodline:#bfe6cc;--shadow:0 6px 24px rgba(22,101,52,.08);
+  }
+  body.alert{
+    --bg:#0d0d10;--card:#17171c;--line:#2a2a33;--text:#ececf1;--mute:#9a9aa8;
+    --accent:#ff3b3b;--accent2:#c81e1e;--field:#0f0f12;--bad:#ff4d4d;--warnbg:#1e1214;--warnline:#5a1d1d;
+    --amber:#ffb020;--good:#3ddc84;--goodbg:#111c16;--goodline:#1d4a33;--shadow:0 6px 30px rgba(255,0,0,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.55;
+       transition:background .9s ease,color .9s ease}
+  .card,.stat,input,select,.bar,th{transition:background .9s ease,border-color .9s ease,color .9s ease,box-shadow .9s ease}
+  .wrap{max-width:940px;margin:0 auto;padding:36px 20px 40px}
+
+  /* header */
+  .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
+       background:color-mix(in srgb,var(--accent) 12%,transparent);padding:6px 12px;border-radius:99px;margin-bottom:14px}
+  h1{font-size:clamp(32px,7vw,56px);font-weight:900;margin:0 0 8px;letter-spacing:-1.5px;line-height:1.05}
+  h1 span{color:var(--accent);transition:color .9s}
+  .sub{color:var(--mute);margin:0 0 28px;font-size:clamp(15px,2.5vw,18px);max-width:640px}
+  header{animation:fadeUp .7s ease both}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,4vw,26px);margin-bottom:18px;box-shadow:var(--shadow)}
+  .formcard{animation:fadeUp .7s .15s ease both}
+  h2{margin:0 0 14px;font-size:clamp(18px,3vw,21px)}
+  h3{margin:22px 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--mute)}
+  h3:first-child{margin-top:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  label{display:block;font-size:13px;color:var(--mute);margin-bottom:6px;font-weight:600}
+  .field{position:relative}
+  .field .pre{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mute);font-weight:700;pointer-events:none}
+  .field .suf{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--mute);font-weight:600;font-size:14px;pointer-events:none}
+  input,select{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--field);color:var(--text);
+    font-size:16px;font-family:inherit;font-weight:600;appearance:none;-webkit-appearance:none}
+  .field.p input{padding-left:30px}
+  .field.s input{padding-right:58px}
+  select{background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+  /* hide ugly number spinners */
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  .hint{font-size:12px;color:var(--mute);margin-top:5px}
+
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:17px 22px;font-size:18px;font-weight:800;cursor:pointer;
+       width:100%;margin-top:22px;font-family:inherit;position:relative;overflow:hidden;transition:transform .15s,background .9s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:scale(.98)}
+  .btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+       transform:translateX(-100%);animation:shine 3s infinite}
+  .ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);margin-top:10px}
+  .ghost::after{display:none}
+
+  #results{display:none}
+  .shock{opacity:0;transform:translateY(24px) scale(.98);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1),background .9s,border-color .9s}
+  .shock.show{opacity:1;transform:none}
+  .warn{background:var(--warnbg);border-color:var(--warnline)}
+  .ok{background:var(--goodbg);border-color:var(--goodline)}
+  .label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:1.2px;font-weight:800;margin-bottom:6px}
+  .big{font-size:clamp(34px,8vw,58px);font-weight:900;color:var(--bad);line-height:1.05;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .big.pulse{animation:pulse 1.6s ease-in-out 2}
+  .say{font-size:clamp(15px,2.4vw,17px);margin-top:10px}
+  .say b{white-space:nowrap}
+
+  .hero{text-align:center;padding:clamp(24px,6vw,40px) clamp(16px,4vw,26px)}
+  .hero .big{font-size:clamp(44px,12vw,84px)}
+  .shake{animation:shake .6s .3s}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .stat{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:16px;opacity:0;transform:translateY(10px);transition:all .5s}
+  .show .stat{opacity:1;transform:none}
+  .show .stat:nth-child(2){transition-delay:.1s}.show .stat:nth-child(3){transition-delay:.2s}
+  .show .stat:nth-child(4){transition-delay:.3s}.show .stat:nth-child(5){transition-delay:.4s}.show .stat:nth-child(6){transition-delay:.5s}
+  .stat b{display:block;font-size:clamp(20px,4vw,26px);font-weight:900;color:var(--amber);font-variant-numeric:tabular-nums}
+  .stat small{color:var(--mute);font-size:13px}
+
+  .bar{height:38px;border-radius:10px;overflow:hidden;display:flex;margin:14px 0 8px;border:1px solid var(--line);background:var(--field)}
+  .bar div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .legend{display:flex;gap:16px;font-size:13px;color:var(--mute);flex-wrap:wrap}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+
+  .budget{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .brow{display:grid;grid-template-columns:130px 1fr 100px;gap:10px;align-items:center;font-size:14px}
+  .brow .track{height:14px;background:var(--field);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .brow .fill{height:100%;width:0;border-radius:99px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+  .brow span:last-child{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+
+  .quote{border-left:4px solid var(--bad);padding:6px 0 6px 16px;font-size:clamp(17px,3vw,21px);font-weight:700;margin:4px 0}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--mute);font-weight:700;position:sticky;top:0;background:var(--card)}
+  tbody tr{animation:fadeIn .4s both}
+  .scroll{max-height:360px;overflow:auto;border-radius:10px;-webkit-overflow-scrolling:touch}
+
+  .q{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;margin:0;color:var(--text);font-size:15px;font-weight:500}
+  .q input{width:22px;height:22px;margin-top:1px;flex:none;accent-color:var(--bad);appearance:auto;-webkit-appearance:checkbox;padding:0}
+  .verdict{font-size:clamp(17px,3vw,21px);font-weight:900;margin-top:16px;min-height:1em}
+  ul{padding-left:20px;margin:8px 0}
+  li{margin:7px 0}
+  .pledge{text-align:center}
+  .pledge .btn{background:var(--good);max-width:420px}
+  .pledged{font-size:18px;font-weight:800;color:var(--good);margin-top:14px;display:none;animation:pop .5s both}
+
+  footer{border-top:1px solid var(--line);margin-top:34px;padding-top:20px;color:var(--mute);font-size:12px;text-align:center}
+  footer p{margin:6px 0}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes shine{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05);text-shadow:0 0 30px color-mix(in srgb,var(--bad) 60%,transparent)}}
+  @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  @keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+  @keyframes flash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}
+  .flash{position:fixed;inset:0;background:#ff1f1f;pointer-events:none;z-index:99;animation:flash .7s ease both}
+
+  /* privacy toast */
+  .toast{position:fixed;right:20px;bottom:20px;max-width:340px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--good);
+    border-radius:14px;padding:16px 16px 14px;box-shadow:0 12px 40px rgba(0,0,0,.18);z-index:50;font-size:14px;
+    transform:translateX(120%);transition:transform .6s cubic-bezier(.2,.8,.2,1),background .9s}
+  .toast.on{transform:none}
+  .toast b{display:flex;align-items:center;gap:8px;font-size:15px;margin-bottom:4px}
+  .toast p{margin:0;color:var(--mute)}
+  .toast .x{position:absolute;top:8px;right:10px;background:none;border:0;color:var(--mute);font-size:20px;cursor:pointer;line-height:1}
+  .toast .ok2{margin-top:10px;background:var(--good);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-weight:800;cursor:pointer;font-family:inherit}
+
+  .pill svg{width:20px;height:20px}
+  .pill.liked{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pill.liked svg{animation:pop .4s both}
+  .engage .note{font-size:12px;color:var(--mute);margin-top:10px;min-height:1em}
+
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}
+  .modal.on{display:flex;animation:fadeIn .25s both}
+  .modal .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;width:100%;max-width:460px;animation:pop .35s both;max-height:92vh;overflow:auto}
+  .modal .box > div{margin-bottom:12px}
+  textarea{width:100%;min-height:110px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--field);color:var(--text);font-size:16px;font-family:inherit;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .modal .acts{display:flex;gap:10px}
+  .modal .acts .btn{margin-top:4px}
+  .err{color:var(--bad);font-size:13px;min-height:1em}
+
+  @media (max-width:560px){
+    .toast{left:12px;right:12px;bottom:12px;max-width:none}
+    .grid{grid-template-columns:1fr 1fr;gap:12px}
+    .grid .full{grid-column:1/-1}
+    .brow{grid-template-columns:96px 1fr 84px;font-size:13px}
+    th,td{padding:7px 5px;font-size:12px}
+    .legend{gap:10px}
+  }
+  @media (max-width:380px){ .grid{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.shock,.stat{opacity:1;transform:none}}
+</style>
+<link rel="stylesheet" href="useful-indeed/footer.css">
+<script src="version-log.js"></script>
+<link rel="canonical" href="https://beforeyouloan.useful-indeed.com/">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="logo.svg">
+<style id="useful-indeed-mobile">.ui-applogo{width:56px;height:56px;border-radius:15px;display:block;margin:0 0 14px;box-shadow:0 6px 18px rgba(22,163,74,.25)}</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="ui-applogo" src="logo.svg" alt="" width="56" height="56">
+    <div class="tag" id="tag">Check muna bago pirma</div>
+    <h1>Before You <span>Loan</span></h1>
+    <p class="sub" id="sub">Bago ka mag-loan, alamin mo muna kung magkano talaga ang babayaran mo — sa pera, sa oras, at sa buhay mo.</p>
+  </header>
+
+  <div class="card formcard" id="form">
+    <h3>Ikaw</h3>
+    <div class="grid">
+      <div class="full"><label>Pangalan mo (optional)</label><input id="name" type="text" placeholder="hal. Juan"></div>
+    </div>
+
+    <h3>Kita mo kada buwan</h3>
+    <div class="grid">
+      <div><label>Sweldo (net / take-home)</label><div class="field p"><span class="pre">₱</span><input id="sal" type="number" inputmode="decimal" value="25000" min="0"></div></div>
+      <div><label>Ibang kita (sideline, allowance, etc.)</label><div class="field p"><span class="pre">₱</span><input id="oth" type="number" inputmode="decimal" value="0" min="0"></div></div>
+      <div><label>Gastos kada buwan (bahay, pagkain, bills)</label><div class="field p"><span class="pre">₱</span><input id="exp" type="number" inputmode="decimal" value="18000" min="0"></div>
+        <div class="hint">Lahat ng regular mong ginagastos</div></div>
+      <div><label>Ibang utang na hinuhulugan mo</label><div class="field p"><span class="pre">₱</span><input id="debt" type="number" inputmode="decimal" value="0" min="0"></div>
+        <div class="hint">Monthly hulog sa ibang loan / credit card</div></div>
+    </div>
+
+    <h3>Yung loan na balak mo</h3>
+    <div class="grid">
+      <div><label>Halaga ng uutangin</label><div class="field p"><span class="pre">₱</span><input id="amt" type="number" inputmode="decimal" value="50000" min="1"></div></div>
+      <div><label>Interest kada buwan</label><div class="field s"><input id="rate" type="number" inputmode="decimal" value="3" step="0.1" min="0"><span class="suf">% / mo</span></div>
+        <div class="hint">Mga lending app: usually 2–6% kada buwan</div></div>
+      <div><label>Ilang buwan babayaran</label><div class="field s"><input id="term" type="number" inputmode="numeric" value="12" min="1"><span class="suf">buwan</span></div></div>
+      <div><label>Processing / service fee</label><div class="field s"><input id="fee" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">%</span></div>
+        <div class="hint">Binabawas agad sa matatanggap mo</div></div>
+      <div><label>Uri ng interest</label>
+        <select id="rtype"><option value="addon">Add-on / flat</option><option value="dim">Diminishing</option></select>
+        <div class="hint">Di sigurado? Karamihan ng apps at salary loan ay add-on.</div></div>
+      <div><label>Late penalty</label><div class="field s"><input id="pen" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">% / mo</span></div>
+        <div class="hint">Tingnan sa kontrata — example lang ito</div></div>
+      <div class="full"><label>Para saan ang loan?</label>
+        <select id="purpose">
+          <option value="want">Gadget / shopping / travel</option>
+          <option value="debt">Pambayad sa ibang utang</option>
+          <option value="emerg">Emergency (ospital, etc.)</option>
+          <option value="biz">Negosyo / pagkakakitaan</option>
+        </select></div>
+    </div>
+    <button class="btn" id="go">Ipakita ang totoong halaga →</button>
+  </div>
+
+  <div id="results"></div>
+
+  <footer>
+    <p>Gumagamit ang calculator na ito ng standard loan math. Iba-iba ang terms ng bawat lender — basahin palagi ang Disclosure Statement (required sa Truth in Lending Act, RA 3765) bago pumirma. Hindi ito financial advice.</p>
+    <p hidden style="display:none!important">© <span id="yr"></span> Before You Loan.</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status">
+  <button class="x" id="tx" aria-label="Isara">×</button>
+  <b><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color:var(--good)"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Walang data na kinokolekta</b>
+  <p>Lahat ng nilalagay mo sa calculator (sweldo, gastos, utang) ay nasa browser mo lang — hindi ito sine-save o pinapadala kahit saan.</p>
+  <button class="ok2" id="tok">Gets ko</button>
+</div>
+
+
+<script>
+const $=id=>document.getElementById(id);
+const peso=n=>'₱'+Math.round(n).toLocaleString('en-PH');
+const pct=n=>n.toFixed(1)+'%';
+$('yr').textContent=new Date().getFullYear();
+
+function solveIRR(net,pay,n){
+  const pv=r=>r===0?pay*n:pay*(1-Math.pow(1+r,-n))/r;
+  if(pv(0)<=net) return 0;
+  let lo=0,hi=1; for(let i=0;i<200;i++){const m=(lo+hi)/2; pv(m)>net?lo=m:hi=m;} return (lo+hi)/2;
+}
+function countUp(el){
+  const end=+el.dataset.to, kind=el.dataset.kind||'peso', dur=1400, t0=performance.now();
+  const fmt=v=>kind==='peso'?peso(v):kind==='pct'?pct(v):Math.round(v).toLocaleString('en-PH');
+  const step=t=>{const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3); el.textContent=fmt(end*e)+(el.dataset.suf||''); if(k<1) requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+const N=(v,kind='peso',suf='')=>`<span class="num" data-to="${v}" data-kind="${kind}" data-suf="${suf}">${kind==='peso'?'₱0':'0'}</span>`;
+
+function calc(){
+  const P=+$('amt').value, r=+$('rate').value/100, n=Math.max(1,Math.round(+$('term').value));
+  const fee=+$('fee').value/100, pen=+$('pen').value/100;
+  const sal=+$('sal').value||0, oth=+$('oth').value||0, exp=+$('exp').value||0, debt=+$('debt').value||0;
+  const inc=sal+oth, type=$('rtype').value, purpose=$('purpose').value;
+  const nm=$('name').value.trim(), you=nm?nm:'ikaw', You=nm?nm:'Ikaw';
+  if(!(P>0)){ $('amt').focus(); return; }
+  if(!(inc>0)){ $('sal').focus(); return; }
+
+  let pay,sched=[];
+  if(type==='addon'){
+    const ti=P*r*n; pay=(P+ti)/n; let bal=P+ti;
+    for(let i=1;i<=n;i++){bal-=pay; sched.push([i,pay,P*r,P/n,Math.max(0,bal)]);}
+  } else {
+    pay=r===0?P/n:P*r/(1-Math.pow(1+r,-n)); let bal=P;
+    for(let i=1;i<=n;i++){const it=bal*r,pr=pay-it; bal-=pr; sched.push([i,pay,it,pr,Math.max(0,bal)]);}
+  }
+  const total=pay*n, interest=total-P, feeAmt=P*fee, received=P-feeAmt, cost=total-received;
+  const irr=solveIRR(received,pay,n), ear=(Math.pow(1+irr,12)-1)*100, apr=irr*1200;
+  const share=pay/inc*100, allDebt=(pay+debt)/inc*100;
+  const hourly=inc/22/8, hrs=cost/hourly, days=hrs/8;
+  const leftBefore=inc-exp-debt, leftAfter=leftBefore-pay;
+  const late1=pay*pen, late3=pay*pen*6;
+  const end=new Date(); end.setMonth(end.getMonth()+n);
+  const endStr=end.toLocaleDateString('en-PH',{month:'long',year:'numeric'});
+  const daysInDebt=Math.round((end-new Date())/864e5);
+  const saveMonths=Math.ceil(P/pay);
+  const costInExp=exp>0?cost/exp:0;
+  const perDay=cost/daysInDebt;
+  const recvPct=received/total*100, feePct=feeAmt/total*100, intPct=interest/total*100;
+
+  const purposeMsg={
+    want:`Kung "gusto" lang ito at hindi "kailangan" — ito ang pinakamahal na paraan para bilhin. Bababa ang value ng bibilhin mo; ang utang, hindi.`,
+    debt:`Ang pag-utang para magbayad ng utang ay kadalasang nagpapalalim ng butas. Kausapin muna ang current lender mo tungkol sa restructuring.`,
+    emerg:`Totoo ang emergencies. Pero bago umutang, i-check muna ang zero o low-interest na options sa ibaba — makakatipid ka ng libo-libo.`,
+    biz:`Mag-loan lang para sa negosyo kung kumikita na ito nang higit sa ${peso(pay)} kada buwan. Ang "sana" ay hindi cash flow.`
+  }[purpose];
+
+  const budgetMax=Math.max(inc,exp+debt+pay);
+  const brow=(lbl,val,color)=>`<div class="brow"><span>${lbl}</span><div class="track"><div class="fill" data-w="${Math.max(0,val)/budgetMax*100}" style="background:${color}"></div></div><span style="color:${val<0?'var(--bad)':'inherit'}">${peso(val)}</span></div>`;
+
+  let budgetMsg;
+  if(leftAfter<0) budgetMsg=`<b style="color:var(--bad)">Kulang ka ng ${peso(-leftAfter)} kada buwan.</b> Ibig sabihin, kailangan mong umutang ulit para mabayaran ito. Ganyan nagsisimula ang debt trap.`;
+  else if(leftAfter<inc*0.1) budgetMsg=`<b style="color:var(--bad)">${peso(leftAfter)} na lang ang matitira sa'yo.</b> Isang sakit, isang sirang cellphone, isang biglang gastos — at hindi mo na kaya ang hulog.`;
+  else budgetMsg=`May matitira pang ${peso(leftAfter)} — pero yan na ang buong "safety net" mo sa loob ng ${n} buwan.`;
+
+  const html=`
+  <div class="card shock warn hero"><div class="label">Kabuuang babayaran mo</div>
+    <div class="big pulse">${N(total)}</div>
+    <div class="say">Uutang ka ng <b>${peso(P)}</b>, pero <b>${peso(received)}</b> lang ang hawak mo pagkatapos ng fee.<br>
+    Ibabalik mo ang <b style="color:var(--bad)">${peso(total)}</b>.</div></div>
+
+  <div class="card shock warn"><div class="label">Ang mawawala sa'yo — kapalit ng wala</div>
+    <div class="big">${N(cost)}</div>
+    <div class="say">Interest na ${peso(interest)} + fee na ${peso(feeAmt)}. Hindi ito mapupunta sa bibilhin mo. Mapupunta ito sa lender.${costInExp>=0.5?` Yan ay katumbas ng <b>${costInExp.toFixed(1)} buwan</b> ng buong gastos mo sa bahay.`:''}</div>
+    <div class="bar">
+      <div data-w="${recvPct}" style="background:#5b5b6a;color:#fff">Hawak mo</div>
+      <div data-w="${feePct}" style="background:var(--amber);color:#000">${feePct>6?'Fee':''}</div>
+      <div data-w="${intPct}" style="background:var(--bad);color:#fff">${intPct>8?'Interest':''}</div>
+    </div>
+    <div class="legend"><span><i class="dot" style="background:#5b5b6a"></i>Perang hawak mo ${pct(recvPct)}</span><span><i class="dot" style="background:var(--amber)"></i>Fee ${pct(feePct)}</span><span><i class="dot" style="background:var(--bad)"></i>Interest ${pct(intPct)}</span></div></div>
+
+  <div class="card shock warn"><div class="label">Ang totoong interest rate</div>
+    <div class="big">${N(ear,'pct',' / taon')}</div>
+    <div class="say">"${$('rate').value}% lang kada buwan" — mukhang maliit, 'di ba? ${type==='addon'?`Pero dahil add-on ito (sinisingil sa buong halaga kahit nabawasan na ang utang mo) at binawas agad ang fee, `:`Kapag sinama ang fee na binawas agad, `}ang totoong annual rate ay <b>${pct(ear)}</b> (nominal APR ${pct(apr)}). Ang savings account sa bangko? Wala pang 1% ang binibigay sa'yo.</div></div>
+
+  <div class="card shock"><h2>Ano ang kukunin nito sa buhay mo</h2>
+    <div class="stats">
+      <div class="stat"><b>${peso(pay)}</b><small>kada buwan, sa loob ng ${n} buwan</small></div>
+      <div class="stat"><b style="color:${share>30?'var(--bad)':'var(--amber)'}">${pct(share)}</b><small>ng kita mo, wala na bago ka pa makabili ng pagkain</small></div>
+      <div class="stat"><b>${Math.round(hrs).toLocaleString()} oras</b><small>ng trabaho (~${days.toFixed(0)} araw) para lang bayaran ang interest at fee</small></div>
+      <div class="stat"><b>${daysInDebt.toLocaleString()} araw</b><small>na may utang ka. Pinakamaaga mong kalayaan: ${endStr}</small></div>
+      <div class="stat"><b>${peso(perDay)}</b><small>kada araw ang binabayad mo para lang "manghiram"</small></div>
+      <div class="stat"><b>${n}</b><small>due dates na hindi mo pwedeng ma-miss. Kahit isa.</small></div>
+    </div></div>
+
+  <div class="card shock ${leftAfter<inc*0.1?'warn':''}"><h2>Ang budget mo, bago at pagkatapos</h2>
+    <div class="budget">
+      ${brow('Kita',inc,'var(--good)')}
+      ${brow('Gastos',exp,'#7c7c8a')}
+      ${debt>0?brow('Ibang utang',debt,'var(--amber)'):''}
+      ${brow('Bagong hulog',pay,'var(--bad)')}
+      ${brow('Matitira',leftAfter,leftAfter<0?'var(--bad)':'var(--good)')}
+    </div>
+    <p class="say">${budgetMsg}</p>
+    ${allDebt>36?`<p class="say"><b style="color:var(--bad)">${pct(allDebt)}</b> ng kita mo ay mapupunta na sa utang. Ang karaniwang payo ng financial planners: huwag lalampas sa 30–36%.</p>`:''}</div>
+
+  <div class="card shock warn"><div class="label">Kapag may nangyaring hindi inaasahan (at madalas, meron)</div>
+    <ul>
+      <li>Na-late ng <b>1 buwan</b> sa isang hulog: mga <b style="color:var(--bad)">${peso(late1)}</b> na penalty.</li>
+      <li>Hindi nakabayad ng <b>3 sunod-sunod na buwan</b>: mga <b style="color:var(--bad)">${peso(late3)}</b> na penalty pa lang, plus <b>${peso(pay*3)}</b> na overdue. Kasama na diyan ang tawag ng collectors, sira na credit record, at stress sa buong pamilya.</li>
+      <li>Nawalan ng trabaho o nagkasakit habang may loan? Due pa rin ang ${peso(pay)} kada buwan. Walang pakialam ang lender.</li>
+    </ul>
+    <div class="hint">Gamit ang ${pct(pen*100)}/buwan na penalty na nilagay mo; may mga kontratang may dagdag pang collection fees.</div></div>
+
+  <div class="card shock"><div class="label">Isipin mo si future ${you}</div>
+    <p class="quote">"Sana hindi na lang ako umutang."</p>
+    <p class="say">Ito ang madalas sabihin ng mga taong nasa buwan 4 o 5 ng loan nila — kapag naubos na ang saya ng bagong bili, pero ${n-4>0?`${n-4} buwan pa`:'may natitira pang'} hulog ang naghihintay. Ang desisyon mo ngayon ang magdadala kay ${you} sa susunod na ${n} buwan. Pakinggan mo siya.</p></div>
+
+  <div class="card shock ok"><div class="label" style="color:var(--good)">Ang mas matalinong paraan: mag-ipon muna</div>
+    <div class="say">Kung itatabi mo ang <b>${peso(pay)}</b> kada buwan imbes na ipambayad, mabubuo mo ang <b>${peso(P)}</b> sa loob lang ng <b style="color:var(--good)">${saveMonths} buwan</b>.
+    ${saveMonths<n?`${n-saveMonths} buwan na mas maaga kaysa matapos ang loan. `:''}At sa'yo pa rin ang <b style="color:var(--good)">${peso(cost)}</b>. Walang lender. Walang collector. Walang kaba.</div></div>
+
+  <div class="card shock"><h2>Bawat hulog na pinapasok mo</h2>
+    <div class="scroll"><table><thead><tr><th>Buwan</th><th>Hulog</th><th>Interest</th><th>Principal</th><th>Natitirang utang</th></tr></thead><tbody>
+    ${sched.map((s,i)=>`<tr style="animation-delay:${Math.min(i,40)*40}ms"><td>${s[0]}</td><td>${peso(s[1])}</td><td style="color:var(--bad)">${peso(s[2])}</td><td>${peso(s[3])}</td><td>${peso(s[4])}</td></tr>`).join('')}
+    <tr><td><b>Total</b></td><td><b>${peso(total)}</b></td><td style="color:var(--bad)"><b>${peso(interest)}</b></td><td><b>${peso(P)}</b></td><td></td></tr>
+    </tbody></table></div></div>
+
+  <div class="card shock"><h2>Maging tapat ka sa sarili mo</h2>
+    <p class="say" style="margin-top:0">${purposeMsg}</p>
+    <div id="qs">
+      ${['Kaya ko bang bayaran ito kahit mawalan ako ng trabaho ng 2 buwan?','May emergency fund ako na hiwalay sa loan na ito.','Kailangan ko pa rin ito 6 na buwan mula ngayon.','Hindi ko ito kayang hintayin at pag-ipunan.','Nabasa ko na ang buong disclosure statement at lahat ng fees.','Registered ang lender sa SEC o BSP.'].map(q=>`<label class="q"><input type="checkbox"><span>${q}</span></label>`).join('')}
+    </div>
+    <div class="verdict" id="verdict"></div></div>
+
+  <div class="card shock ok"><h2>Bago ka umutang, subukan muna ito</h2>
+    <ul>
+      <li>Magbenta ng gamit na hindi mo na ginagamit, o mag-extra hours / sideline ng ilang buwan.</li>
+      <li>Para sa emergency: SSS o Pag-IBIG salary/calamity loan, PhilHealth, tulong mula sa LGU o DSWD, Malasakit Centers para sa bills sa ospital.</li>
+      <li>Tanungin ang ospital, school, o seller kung may 0% interest na installment.</li>
+      <li>May utang na? Kausapin muna ang lender tungkol sa restructuring bago kumuha ng bago.</li>
+      <li>Kung talagang kailangan: ikumpara ang 3 lenders base sa <b>effective rate</b>, hindi sa monthly rate. Iwasan ang unregistered na lending apps.</li>
+    </ul></div>
+
+  <div class="card shock ok pledge"><h2>Bigyan mo ang sarili mo ng 30 araw</h2>
+    <p class="say" style="margin-top:0">Karamihan ng "kailangan ko na ngayon" ay nawawala pagkalipas ng ilang linggo. Maghintay ng 30 araw bago mag-apply. Kung kailangan mo pa rin pagkatapos — at least sigurado ka na.</p>
+    <button class="btn" id="pledgeBtn">Oo, maghihintay muna ako ng 30 araw</button>
+    <div class="pledged" id="pledged"></div></div>
+
+  <button class="btn ghost" id="reset">← Ulitin / baguhin ang numbers</button>`;
+
+  const res=$('results'); res.innerHTML=html; res.style.display='block';
+  document.body.classList.add('alert');
+  $('tag').textContent='Babala: basahin mo ito';
+  $('sub').textContent=`${You}, ito ang totoong presyo ng loan na balak mo.`;
+  const fl=document.createElement('div'); fl.className='flash'; document.body.appendChild(fl); setTimeout(()=>fl.remove(),800);
+
+  const cards=[...res.querySelectorAll('.shock')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting) return; const c=e.target; io.unobserve(c);
+    c.classList.add('show');
+    c.querySelectorAll('.num').forEach(countUp);
+    c.querySelectorAll('[data-w]').forEach(b=>setTimeout(()=>b.style.width=b.dataset.w+'%',150));
+  }),{threshold:.15});
+  cards.forEach(c=>io.observe(c));
+  cards[0].classList.add('shake');
+  setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'start'}),250);
+
+  const boxes=[...res.querySelectorAll('#qs input')];
+  boxes.forEach(b=>b.addEventListener('change',()=>{
+    const yes=boxes.filter(x=>x.checked).length, v=$('verdict');
+    if(!yes){v.textContent='';return;}
+    v.style.animation='none'; v.offsetHeight; v.style.animation='pop .4s both';
+    if(yes<4){v.style.color='var(--bad)';v.textContent=`${yes}/6 — Hindi ka pa handa. Huwag muna ituloy ang loan.`;}
+    else if(yes<6){v.style.color='var(--amber)';v.textContent=`${yes}/6 — Pag-isipan mong mabuti. Ano ang sinasabi ng mga "hindi"?`;}
+    else{v.style.color='var(--good)';v.textContent='6/6 — Nag-research ka talaga. Umutang lang ng kailangan, at magbayad sa oras.';}
+  }));
+  $('pledgeBtn').addEventListener('click',()=>{
+    const d=new Date(); d.setDate(d.getDate()+30);
+    const p=$('pledged'); p.style.display='block';
+    p.textContent=`Ayos, ${you}! Balikan mo ito sa ${d.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}. Si future ${you} ay nagpapasalamat. 💚`;
+    $('pledgeBtn').style.display='none';
+  });
+  $('reset').addEventListener('click',()=>{
+    document.body.classList.remove('alert'); res.style.display='none';
+    $('tag').textContent='Check muna bago pirma';
+    $('sub').textContent='Bago ka mag-loan, alamin mo muna kung magkano talaga ang babayaran mo — sa pera, sa oras, at sa buhay mo.';
+    $('form').scrollIntoView({behavior:'smooth'});
+  });
+}
+$('go').addEventListener('click',calc);
+
+/* ---------- privacy toast ---------- */
+const hideToast=()=>$('toast').classList.remove('on');
+setTimeout(()=>$('toast').classList.add('on'),1200);
+$('tx').onclick=hideToast; $('tok').onclick=hideToast;
+
+document.querySelectorAll('#form input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')calc();}));
+</script>
+<footer class="ui-foot">
+  <div class="ui-foot-in">
+    <a class="ui-foot-brand" href="https://useful-indeed.com" title="More small, free tools on useful-indeed"><img src="useful-indeed/logo.svg" alt="useful-indeed logo" width="22" height="22"><span>© <span data-ui-year>2026</span> <b>useful-indeed</b></span></a>
+    <nav class="ui-foot-nav" aria-label="Site"><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></nav>
+    <button type="button" class="ui-foot-ver" data-ui-ver>v1.0 · Version log</button>
+  </div>
+</footer>
+<script src="useful-indeed/badge.js" defer></script>
+</body>
+</html>
