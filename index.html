@@ -173,7 +173,24 @@
 <link rel="canonical" href="https://beforeyouloan.useful-indeed.com/">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="apple-touch-icon" href="logo.svg">
-<style id="useful-indeed-mobile">.ui-applogo{width:56px;height:56px;border-radius:15px;display:block;margin:0 0 14px;box-shadow:0 6px 18px rgba(22,163,74,.25)}</style>
+<style id="useful-indeed-mobile">.ui-applogo{width:56px;height:56px;border-radius:15px;display:block;margin:0 0 14px;box-shadow:0 6px 18px rgba(22,163,74,.25)}
+  /* gabay sa ilalim */
+  .guide{margin-top:34px}
+  .guide>h2{font-size:clamp(22px,3.6vw,28px);margin:0 0 14px;letter-spacing:-.01em}
+  .guide p,.guide li{color:var(--mute)}
+  .guide b{color:var(--text)}
+  .guide ol,.guide ul{padding-left:22px;display:grid;gap:6px;margin:0}
+  .guide table{width:100%;border-collapse:collapse;font-size:14.5px;margin:6px 0 10px}
+  .guide th,.guide td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+  .guide th{color:var(--text)}
+  .guide td.n,.guide th.n{text-align:right;white-space:nowrap}
+  .guide details{border-top:1px solid var(--line);padding:12px 0}
+  .guide summary{cursor:pointer;font-weight:700;color:var(--text)}
+  .guide details p{margin:6px 0 0}
+  .guide table{table-layout:fixed}
+  .guide th:first-child,.guide td:first-child{width:50%;overflow-wrap:anywhere}
+  @media (max-width:520px){.guide table{font-size:13px}.guide th,.guide td{padding:7px 4px}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -225,6 +242,55 @@
   </div>
 
   <div id="results"></div>
+
+  <section class="guide" id="gabay">
+    <h2>Paano gamitin ang Before You Loan</h2>
+    <div class="card">
+      <ol>
+        <li><b>Ilagay ang kita at gastos mo</b> kada buwan: sweldo, ibang kita, regular na gastos, at mga hulog sa ibang utang.</li>
+        <li><b>Ilagay ang detalye ng loan</b> na balak mo: halaga, interest kada buwan, ilang buwan, processing fee, uri ng interest at late penalty. Makikita mo ang mga ito sa offer o kontrata ng lender.</li>
+        <li><b>Piliin kung para saan</b> ang loan, para mabigyan ka ng payong akma sa sitwasyon mo.</li>
+        <li><b>I-click ang "Ipakita ang totoong halaga"</b> at basahin ang resulta: kabuuang babayaran, tunay na interest rate, epekto sa budget mo, at ang mangyayari kapag na-late.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Add-on vs diminishing: bakit malaki ang pinagkaiba?</h2>
+      <p>Sa <b>add-on (flat)</b> na interest, sinisingil ang interest sa <b>buong halaga ng inutang</b> sa buong termino, kahit nababawasan na ang utang mo bawat hulog. Sa <b>diminishing</b>, sinisingil lang ang interest sa <b>natitirang balanse</b>. Parehong "3% kada buwan" ang nakasulat, pero ibang-iba ang babayaran mo:</p>
+      <table>
+        <tr><th>₱50,000 · 3% kada buwan · 12 buwan</th><th class="n">Add-on</th><th class="n">Diminishing</th></tr>
+        <tr><td>Hulog kada buwan</td><td class="n">₱5,667</td><td class="n">₱5,023</td></tr>
+        <tr><td>Kabuuang babayaran</td><td class="n">₱68,000</td><td class="n">₱60,277</td></tr>
+        <tr><td>Kabuuang interest</td><td class="n">₱18,000</td><td class="n">₱10,277</td></tr>
+      </table>
+      <p>Karamihan ng lending app at salary loan ay add-on, kaya laging itanong kung alin ang gamit nila.</p>
+    </div>
+
+    <div class="card">
+      <h2>Ano ang "totoong interest rate"?</h2>
+      <p>Ang nakikita sa ad ay kadalasang monthly rate lang, at hindi pa kasama ang processing fee na binabawas agad sa matatanggap mo. Sa halimbawa sa itaas na may 5% na fee, ₱47,500 lang ang hawak mo pero ₱68,000 ang ibabalik mo. Kapag kinompyut nang tama, ang totoong rate ay mga <b>6% kada buwan, o mahigit 100% kada taon</b>. Ito ang tinatawag na <b>effective interest rate (EIR)</b>, at ito ang dapat mong ikumpara sa iba't ibang lender.</p>
+    </div>
+
+    <div class="card">
+      <h2>Mga dapat itanong bago pumirma</h2>
+      <ul>
+        <li>Add-on ba o diminishing ang interest?</li>
+        <li>Magkano ang processing, service o documentary fee, at ibabawas ba agad?</li>
+        <li>Magkano ang penalty kapag na-late, at may collection fee pa ba?</li>
+        <li>May bayad ba kapag binayaran ko nang maaga (pre-termination fee)?</li>
+        <li>Ano ang nakasulat sa <b>Disclosure Statement</b>? Required ito sa ilalim ng Truth in Lending Act (RA 3765), kaya hingin mo bago pumirma.</li>
+        <li>Rehistrado ba ang lender sa SEC (para sa lending at financing companies) o sa BSP (para sa mga bangko)?</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Mga tanong</h2>
+      <details><summary>Naka-save ba o naipapadala ang mga nilagay ko?</summary><p>Hindi. Lahat ng kompyutasyon ay nangyayari sa browser mo. Walang sine-save at walang pinapadala kahit saan.</p></details>
+      <details><summary>Eksakto ba ang mga numero?</summary><p>Gumagamit ito ng standard na loan math, kaya malapit ito sa totoo. Pero iba-iba ang paraan ng pagsingil ng bawat lender, kaya ang Disclosure Statement at kontrata pa rin ang masusunod.</p></details>
+      <details><summary>Paano ko malalaman kung kaya ko ang hulog?</summary><p>Tingnan ang "Ang budget mo, bago at pagkatapos" sa resulta. Kung halos wala nang matitira sa'yo pagkatapos ng hulog at gastos, delikado ang loan, kasi isang biglang gastos lang ay mapipilitan kang umutang ulit.</p></details>
+      <details><summary>Financial advice ba ito?</summary><p>Hindi. Tool ito para makita mo nang malinaw ang totoong halaga ng utang. Ikaw pa rin ang magdedesisyon, at mainam na kumonsulta sa eksperto para sa malalaking loan.</p></details>
+    </div>
+  </section>
 
   <footer>
     <p>Gumagamit ang calculator na ito ng standard loan math. Iba-iba ang terms ng bawat lender — basahin palagi ang Disclosure Statement (required sa Truth in Lending Act, RA 3765) bago pumirma. Hindi ito financial advice.</p>
