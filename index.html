@@ -20,9 +20,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f4faf6;--card:#ffffff;--line:#d9ebe0;--text:#12301f;--mute:#5f7a6a;
-    --accent:#16a34a;--accent2:#0f7a37;--field:#f8fcf9;--bad:#16a34a;--warnbg:#ffffff;--warnline:#d9ebe0;
-    --amber:#d97706;--good:#16a34a;--goodbg:#effaf3;--goodline:#bfe6cc;--shadow:0 6px 24px rgba(22,101,52,.08);
+    --bg:#f4faf6;--card:#ffffff;--line:#d9ebe0;--text:#12301f;--mute:#4b6556;
+    --accent:#15803d;--accent2:#0f7a37;--field:#f8fcf9;--bad:#16a34a;--warnbg:#ffffff;--warnline:#d9ebe0;
+    --amber:#d97706;--good:#15803d;--goodbg:#effaf3;--goodline:#bfe6cc;--shadow:0 6px 24px rgba(22,101,52,.08);
   }
   body.alert{
     --bg:#0d0d10;--card:#17171c;--line:#2a2a33;--text:#ececf1;--mute:#9a9aa8;
@@ -218,29 +218,29 @@
 
     <h3>Kita mo kada buwan</h3>
     <div class="grid">
-      <div><label>Sweldo (net / take-home)</label><div class="field p"><span class="pre">₱</span><input id="sal" type="number" inputmode="decimal" value="25000" min="0"></div></div>
-      <div><label>Ibang kita (sideline, allowance, etc.)</label><div class="field p"><span class="pre">₱</span><input id="oth" type="number" inputmode="decimal" value="0" min="0"></div></div>
-      <div><label>Gastos kada buwan (bahay, pagkain, bills)</label><div class="field p"><span class="pre">₱</span><input id="exp" type="number" inputmode="decimal" value="18000" min="0"></div>
+      <div><label for="sal">Sweldo (net / take-home)</label><div class="field p"><span class="pre">₱</span><input id="sal" type="number" inputmode="decimal" value="25000" min="0"></div></div>
+      <div><label for="oth">Ibang kita (sideline, allowance, etc.)</label><div class="field p"><span class="pre">₱</span><input id="oth" type="number" inputmode="decimal" value="0" min="0"></div></div>
+      <div><label for="exp">Gastos kada buwan (bahay, pagkain, bills)</label><div class="field p"><span class="pre">₱</span><input id="exp" type="number" inputmode="decimal" value="18000" min="0"></div>
         <div class="hint">Lahat ng regular mong ginagastos</div></div>
-      <div><label>Ibang utang na hinuhulugan mo</label><div class="field p"><span class="pre">₱</span><input id="debt" type="number" inputmode="decimal" value="0" min="0"></div>
+      <div><label for="debt">Ibang utang na hinuhulugan mo</label><div class="field p"><span class="pre">₱</span><input id="debt" type="number" inputmode="decimal" value="0" min="0"></div>
         <div class="hint">Monthly hulog sa ibang loan / credit card</div></div>
     </div>
 
     <h3>Yung loan na balak mo</h3>
     <div class="grid">
-      <div><label>Halaga ng uutangin</label><div class="field p"><span class="pre">₱</span><input id="amt" type="number" inputmode="decimal" value="50000" min="1"></div></div>
-      <div><label>Interest kada buwan</label><div class="field s"><input id="rate" type="number" inputmode="decimal" value="3" step="0.1" min="0"><span class="suf">% / mo</span></div>
+      <div><label for="amt">Halaga ng uutangin</label><div class="field p"><span class="pre">₱</span><input id="amt" type="number" inputmode="decimal" value="50000" min="1"></div></div>
+      <div><label for="rate">Interest kada buwan</label><div class="field s"><input id="rate" type="number" inputmode="decimal" value="3" step="0.1" min="0"><span class="suf">% / mo</span></div>
         <div class="hint">Mga lending app: usually 2–6% kada buwan</div></div>
-      <div><label>Ilang buwan babayaran</label><div class="field s"><input id="term" type="number" inputmode="numeric" value="12" min="1"><span class="suf">buwan</span></div></div>
-      <div><label>Processing / service fee</label><div class="field s"><input id="fee" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">%</span></div>
+      <div><label for="term">Ilang buwan babayaran</label><div class="field s"><input id="term" type="number" inputmode="numeric" value="12" min="1"><span class="suf">buwan</span></div></div>
+      <div><label for="fee">Processing / service fee</label><div class="field s"><input id="fee" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">%</span></div>
         <div class="hint">Binabawas agad sa matatanggap mo</div></div>
       <div><label>Uri ng interest</label>
-        <select id="rtype"><option value="addon">Add-on / flat</option><option value="dim">Diminishing</option></select>
+        <select id="rtype" aria-label="Uri ng interest"><option value="addon">Add-on / flat</option><option value="dim">Diminishing</option></select>
         <div class="hint">Di sigurado? Karamihan ng apps at salary loan ay add-on.</div></div>
-      <div><label>Late penalty</label><div class="field s"><input id="pen" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">% / mo</span></div>
+      <div><label for="pen">Late penalty</label><div class="field s"><input id="pen" type="number" inputmode="decimal" value="5" step="0.5" min="0"><span class="suf">% / mo</span></div>
         <div class="hint">Tingnan sa kontrata — example lang ito</div></div>
       <div class="full"><label>Para saan ang loan?</label>
-        <select id="purpose">
+        <select id="purpose" aria-label="Para saan ang loan?">
           <option value="want">Gadget / shopping / travel</option>
           <option value="debt">Pambayad sa ibang utang</option>
           <option value="emerg">Emergency (ospital, etc.)</option>
